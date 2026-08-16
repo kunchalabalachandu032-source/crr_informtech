@@ -113,11 +113,24 @@ router.put('/crs/:id', requireAdmin, async (req, res) => {
     }
 });
 
-// 6. DELETE CR Account
+// 6. DELETE CR Account (Cascading Cleanup from cr_accounts, crs, cr_users, managers)
 router.delete('/crs/:id', requireAdmin, async (req, res) => {
     try {
-        await db.query("DELETE FROM cr_accounts WHERE id = ?", [req.params.id]);
-        res.json({ success: true, message: 'CR Account deleted successfully' });
+        const id = req.params.id;
+
+        // Fetch roll number and email first
+        const [crRows] = await db.query("SELECT roll_number, email FROM cr_accounts WHERE id = ?", [id]);
+        if (crRows.length > 0) {
+            const { roll_number, email } = crRows[0];
+            try { await db.query("DELETE FROM crs WHERE roll_number = ? OR email = ?", [roll_number, email]); } catch(e){}
+            try { await db.query("DELETE FROM cr_users WHERE roll_number = ? OR email = ?", [roll_number, email]); } catch(e){}
+            try { await db.query("DELETE FROM managers WHERE username = ? OR username = ?", [roll_number, email]); } catch(e){}
+        }
+
+        // Delete from main cr_accounts table
+        await db.query("DELETE FROM cr_accounts WHERE id = ?", [id]);
+
+        res.json({ success: true, message: 'CR Account deleted successfully!' });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
