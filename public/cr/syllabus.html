@@ -100,7 +100,7 @@ body::before {
     color: #ffffff !important; border: 1.5px solid rgba(255, 255, 255, 0.45);
     border-radius: 12px; font-weight: 700; font-size: 14px;
     padding: 9px 18px; transition: all 0.25s ease;
-    text-decoration: none; display: inline-block;
+    text-decoration: none; display: inline-block; cursor: pointer;
 }
 .btn-glass-white:hover {
     background: rgba(255, 255, 255, 0.45); color: #ffffff !important;
@@ -142,7 +142,7 @@ body::before {
             <h2 class="fw-bold mb-1" id="selected-subject-title">Select a Subject</h2>
             <p class="mb-0">Upload or view syllabus PDF, Excel sheet, or Google Drive link</p>
         </div>
-        <button class="btn-glass-white" data-bs-toggle="modal" data-bs-target="#addSyllabusModal">
+        <button class="btn-glass-white" onclick="openAddSyllabusModal()">
             <i class="fa-solid fa-plus-circle me-1"></i> Add Syllabus
         </button>
     </div>
@@ -162,7 +162,7 @@ body::before {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 18px;">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-circle-plus me-2"></i> Add Subject Syllabus</h5>
+                <h5 class="modal-title fw-bold" id="addSyllabusModalTitle"><i class="fa-solid fa-file-circle-plus me-2"></i> Add Subject Syllabus</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form id="addSyllabusForm" enctype="multipart/form-data">
@@ -225,11 +225,26 @@ async function loadSectionSubjects() {
     const container = document.getElementById('subject-menu-container');
     container.innerHTML = `<div class="text-center py-3 text-white-50"><i class="fa-solid fa-spinner fa-spin me-1"></i> Loading subjects...</div>`;
 
-    const res = await fetch(`/api/subjects?year=${crYear}&section=${encodeURIComponent(crSection)}`);
-    const data = await res.json();
+    let res = await fetch(`/api/subjects?year=${crYear}&section=${encodeURIComponent(crSection)}`);
+    let data = await res.json();
+
+    if (!data.success || !data.data || data.data.length === 0) {
+        res = await fetch(`/api/subjects/all-by-year?year=${crYear}`);
+        data = await res.json();
+    }
 
     if (data.success && data.data && data.data.length > 0) {
-        container.innerHTML = data.data.map((s, idx) => `
+        const uniqueSubjects = [];
+        const seenNames = new Set();
+        data.data.forEach(s => {
+            const cleanName = s.subject_name.trim();
+            if (!seenNames.has(cleanName.toLowerCase())) {
+                seenNames.add(cleanName.toLowerCase());
+                uniqueSubjects.push(s);
+            }
+        });
+
+        container.innerHTML = uniqueSubjects.map((s, idx) => `
             <div class="subject-item-link ${idx === 0 ? 'active' : ''}" onclick="onSelectSubject(\`${s.subject_name.replace(/`/g, '')}\`, this)">
                 <span>
                     <i class="fa-solid ${s.subject_type === 'Lab' ? 'fa-flask text-warning' : 'fa-book text-primary'} me-2"></i> 
@@ -239,7 +254,7 @@ async function loadSectionSubjects() {
             </div>
         `).join('');
         
-        onSelectSubject(data.data[0].subject_name, container.querySelector('.subject-item-link'));
+        onSelectSubject(uniqueSubjects[0].subject_name, container.querySelector('.subject-item-link'));
     } else {
         container.innerHTML = `<div class="text-center py-4 text-white-50 small"><i class="fa-solid fa-info-circle me-1"></i> No subjects added for ${crSection} yet.</div>`;
         document.getElementById('selected-subject-title').textContent = 'No Subject Selected';
@@ -254,6 +269,13 @@ function onSelectSubject(subName, el) {
 
     document.getElementById('selected-subject-title').textContent = `${currentSubject} Syllabus`;
     loadSyllabusData();
+}
+
+function openAddSyllabusModal() {
+    if (!currentSubject) return alert("Please select a subject first!");
+    document.getElementById('addSyllabusModalTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus me-2"></i> Add Syllabus for ${currentSubject}`;
+    const modal = new bootstrap.Modal(document.getElementById('addSyllabusModal'));
+    modal.show();
 }
 
 async function loadSyllabusData() {
