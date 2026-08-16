@@ -92,7 +92,28 @@ router.post('/crs', requireAdmin, async (req, res) => {
     }
 });
 
-// 5. DELETE CR Account
+// 5. PUT Update CR Account
+router.put('/crs/:id', requireAdmin, async (req, res) => {
+    const { name, roll_number, year, section, email, phone, password } = req.body;
+    try {
+        if (password && password.trim() !== '') {
+            await db.query(
+                "UPDATE cr_accounts SET name = ?, roll_number = ?, year = ?, section = ?, email = ?, phone = ?, password = ? WHERE id = ?",
+                [name, roll_number, year, section, email, phone, password, req.params.id]
+            );
+        } else {
+            await db.query(
+                "UPDATE cr_accounts SET name = ?, roll_number = ?, year = ?, section = ?, email = ?, phone = ? WHERE id = ?",
+                [name, roll_number, year, section, email, phone, req.params.id]
+            );
+        }
+        res.json({ success: true, message: 'CR Account updated successfully!' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// 6. DELETE CR Account
 router.delete('/crs/:id', requireAdmin, async (req, res) => {
     try {
         await db.query("DELETE FROM cr_accounts WHERE id = ?", [req.params.id]);
@@ -102,7 +123,7 @@ router.delete('/crs/:id', requireAdmin, async (req, res) => {
     }
 });
 
-// 6. GET Faculty Directory
+// 7. GET Faculty Directory
 router.get('/faculty', requireAdmin, async (req, res) => {
     try {
         const [rows] = await db.query("SELECT * FROM faculty ORDER BY id DESC");
@@ -112,7 +133,7 @@ router.get('/faculty', requireAdmin, async (req, res) => {
     }
 });
 
-// 7. POST Add Faculty
+// 8. POST Add Faculty
 router.post('/faculty', requireAdmin, async (req, res) => {
     const { name, designation } = req.body;
     try {
@@ -123,7 +144,7 @@ router.post('/faculty', requireAdmin, async (req, res) => {
     }
 });
 
-// 8. DELETE Faculty
+// 9. DELETE Faculty
 router.delete('/faculty/:id', requireAdmin, async (req, res) => {
     try {
         await db.query("DELETE FROM faculty WHERE id = ?", [req.params.id]);

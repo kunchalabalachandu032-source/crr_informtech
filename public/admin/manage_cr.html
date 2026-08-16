@@ -122,9 +122,20 @@ body {
     font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 20px;
 }
 
+.btn-edit-action {
+    background: #e0f2fe; color: #0284c7; border: 1px solid rgba(2, 132, 199, 0.25);
+    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
+    transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px;
+    margin-right: 6px;
+}
+.btn-edit-action:hover {
+    background: #0284c7; color: #ffffff;
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.3); transform: translateY(-1px);
+}
+
 .btn-delete-action {
     background: #fff1f2; color: #e11d48; border: 1px solid rgba(225, 29, 72, 0.2);
-    padding: 8px 18px; border-radius: 10px; font-weight: 600; font-size: 13px;
+    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
     transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px;
 }
 
@@ -160,7 +171,7 @@ body {
     <div class="page-header-card">
         <div>
             <h2><i class="fa-solid fa-users-gear text-primary me-2"></i>Manage CR Accounts</h2>
-            <p>Create & manage Class Representative (CR) login accounts</p>
+            <p>Create, Edit & Delete Class Representative (CR) login accounts</p>
         </div>
         <button class="btn-add-primary" data-bs-toggle="modal" data-bs-target="#addCrModal">
             <i class="fa-solid fa-user-plus"></i> Add New CR Account
@@ -256,8 +267,73 @@ body {
     </div>
 </div>
 
+<!-- EDIT CR ACCOUNT MODAL -->
+<div class="modal fade" id="editCrModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #0284c7, #0d6efd); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px 28px;">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i> Edit CR Account Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editCrForm">
+                <input type="hidden" id="editCrId" name="id">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">CR Full Name *</label>
+                        <input type="text" id="editName" name="name" class="form-control form-control-lg fs-6" required style="border-radius: 12px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Roll Number / CR ID *</label>
+                        <input type="text" id="editRoll" name="roll_number" class="form-control form-control-lg fs-6" required style="border-radius: 12px;">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-dark">Year *</label>
+                            <select id="editYear" name="year" class="form-select form-select-lg fs-6" style="border-radius: 12px;">
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-dark">Section *</label>
+                            <select id="editSection" name="section" class="form-select form-select-lg fs-6" style="border-radius: 12px;">
+                                <option value="IT2A">IT2A</option>
+                                <option value="IT2B">IT2B</option>
+                                <option value="IT2C">IT2C</option>
+                                <option value="IT3A">IT3A</option>
+                                <option value="IT3B">IT3B</option>
+                                <option value="IT3C">IT3C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Email Address *</label>
+                        <input type="email" id="editEmail" name="email" class="form-control form-control-lg fs-6" required style="border-radius: 12px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Phone Number</label>
+                        <input type="text" id="editPhone" name="phone" class="form-control form-control-lg fs-6" style="border-radius: 12px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Password (Leave blank to keep unchanged)</label>
+                        <input type="password" name="password" class="form-control form-control-lg fs-6" placeholder="Enter New Password (Optional)" style="border-radius: 12px;">
+                    </div>
+                </div>
+                <div class="modal-footer bg-light" style="border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; padding: 18px 28px;">
+                    <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 12px;">Cancel</button>
+                    <button type="submit" class="btn btn-success px-4 py-2 fw-bold" style="border-radius: 12px; background: linear-gradient(135deg, #16a34a, #15803d); border: none;">
+                        <i class="fa-solid fa-check me-1"></i> Update CR Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    let crAccountsList = [];
+
     function showAlert(type, message) {
         const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
         const alertHtml = `
@@ -277,6 +353,7 @@ body {
                 const tbody = document.getElementById('cr-table-body');
                 
                 if (data.success && data.data && data.data.length > 0) {
+                    crAccountsList = data.data;
                     tbody.innerHTML = data.data.map(cr => `
                         <tr>
                             <td class="px-4">
@@ -292,6 +369,9 @@ body {
                             <td><i class="fa-solid fa-envelope me-2 text-primary opacity-75"></i> ${cr.email || ''}</td>
                             <td><i class="fa-solid fa-phone me-2 text-success opacity-75"></i> ${cr.phone || 'N/A'}</td>
                             <td class="text-center">
+                                <button class="btn-edit-action" onclick="openEditCrModal(${cr.id})">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                                </button>
                                 <button class="btn-delete-action" onclick="deleteCr(${cr.id})">
                                     <i class="fa-solid fa-trash me-1"></i> Delete
                                 </button>
@@ -299,6 +379,7 @@ body {
                         </tr>
                     `).join('');
                 } else {
+                    crAccountsList = [];
                     tbody.innerHTML = `
                         <tr>
                             <td colspan="6" class="text-center py-5 text-muted">
@@ -314,6 +395,22 @@ body {
             console.error('Error fetching CRs:', error);
             showAlert('danger', 'Failed to load CR accounts.');
         }
+    }
+
+    function openEditCrModal(id) {
+        const cr = crAccountsList.find(c => c.id == id);
+        if (!cr) return;
+
+        document.getElementById('editCrId').value = cr.id;
+        document.getElementById('editName').value = cr.name || '';
+        document.getElementById('editRoll').value = cr.roll_number || '';
+        document.getElementById('editYear').value = cr.year || '2';
+        document.getElementById('editSection').value = cr.section || 'IT2A';
+        document.getElementById('editEmail').value = cr.email || '';
+        document.getElementById('editPhone').value = cr.phone || '';
+
+        const modal = new bootstrap.Modal(document.getElementById('editCrModal'));
+        modal.show();
     }
 
     async function deleteCr(id) {
@@ -357,6 +454,32 @@ body {
             }
         } catch (error) {
             showAlert('danger', 'An error occurred while adding CR account.');
+        }
+    });
+
+    document.getElementById('editCrForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editCrId').value;
+        const formData = new FormData(e.target);
+        const jsonData = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch(`/api/admin/crs/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('editCrModal')).hide();
+                showAlert('success', data.message || 'CR Account updated successfully!');
+                loadCrs();
+            } else {
+                showAlert('danger', data.message || 'Failed to update CR account.');
+            }
+        } catch (error) {
+            showAlert('danger', 'An error occurred while updating CR account.');
         }
     });
 
