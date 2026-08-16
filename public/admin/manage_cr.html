@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=1200, initial-scale=0.35, maximum-scale=3.0">
 <title>Manage CR Accounts | CRR-INFORMTECH</title>
 
 <!-- Bootstrap 5.3 CSS -->
@@ -14,20 +14,20 @@
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body {
-    background: #eef2f9;
-    background-image: 
-        radial-gradient(at 10% 10%, rgba(13, 110, 253, 0.05) 0px, transparent 50%),
-        radial-gradient(at 90% 90%, rgba(3, 105, 161, 0.05) 0px, transparent 50%);
-    min-height: 100vh;
+
+/* FORCE 1200px DESKTOP VIEW */
+html, body {
+    min-width: 1200px !important; width: 1200px !important;
+    margin: 0 auto !important; overflow-x: auto !important;
+    background: #eef2f9; min-height: 100vh;
 }
 
 /* ================= Left Sidebar ================= */
 .sidebar {
-    position: fixed; left: 0; top: 0; width: 270px; height: 100vh;
+    position: fixed; left: 0; top: 0; width: 270px !important; height: 100vh;
     background: linear-gradient(180deg, #0f2b46 0%, #0d6efd 100%);
     color: white; padding-top: 25px; box-shadow: 4px 0 20px rgba(0,0,0,0.08);
-    z-index: 100; overflow-y: auto;
+    z-index: 100; overflow-y: auto; transform: none !important;
 }
 
 .sidebar-header {
@@ -57,13 +57,13 @@ body {
 }
 
 /* ================= Main Content Area ================= */
-.main-content { margin-left: 270px; padding: 40px; }
+.main-content { margin-left: 270px !important; width: 930px !important; padding: 35px 25px; }
 
 .page-header-card {
-    background: #ffffff; padding: 30px 35px; border-radius: 22px;
+    background: #ffffff; padding: 25px 30px; border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 35px; flex-wrap: wrap; gap: 20px; position: relative; overflow: hidden;
+    margin-bottom: 25px; position: relative; overflow: hidden;
 }
 
 .page-header-card::before {
@@ -71,25 +71,24 @@ body {
     background: linear-gradient(180deg, #0d6efd, #0369a1);
 }
 
-.page-header-card h2 { font-weight: 800; color: #0f172a; margin: 0; font-size: 26px; }
-.page-header-card p { font-size: 14px; color: #64748b; margin: 4px 0 0 0; }
+.page-header-card h2 { font-weight: 800; color: #0f172a; margin: 0; font-size: 24px; }
+.page-header-card p { font-size: 13px; color: #64748b; margin: 3px 0 0 0; }
 
 .btn-add-primary {
     background: linear-gradient(135deg, #0d6efd 0%, #0369a1 100%);
-    color: #ffffff; border: none; padding: 12px 28px; border-radius: 14px;
-    font-weight: 700; font-size: 14.5px; transition: all 0.25s ease;
+    color: #ffffff; border: none; padding: 11px 24px; border-radius: 12px;
+    font-weight: 700; font-size: 14px; transition: all 0.25s ease;
     box-shadow: 0 8px 20px rgba(13, 110, 253, 0.28);
-    display: inline-flex; align-items: center; gap: 10px;
+    display: inline-flex; align-items: center; gap: 8px;
 }
 
 .btn-add-primary:hover {
     background: linear-gradient(135deg, #0a58ca 0%, #0284c7 100%);
     color: #ffffff; transform: translateY(-2px);
-    box-shadow: 0 12px 26px rgba(13, 110, 253, 0.38);
 }
 
 .content-card {
-    background: #ffffff; border-radius: 22px; padding: 30px;
+    background: #ffffff; border-radius: 20px; padding: 25px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);
 }
 
@@ -100,48 +99,47 @@ body {
 
 .table th {
     background: transparent; color: #ffffff; border: none;
-    font-weight: 700; font-size: 13.5px; letter-spacing: 0.5px; text-transform: uppercase;
+    font-weight: 700; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;
 }
 
-.table td { font-size: 14px; vertical-align: middle; padding: 16px 14px; }
+.table td { font-size: 13.5px; vertical-align: middle; padding: 14px 12px; }
 
 .cr-avatar {
-    width: 42px; height: 42px; border-radius: 12px;
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
     background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0284c7;
-    font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+    font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center;
 }
 
 .badge-roll {
     background: #e0f2fe; color: #0369a1; border: 1px solid rgba(3, 105, 161, 0.2);
-    font-family: monospace; font-size: 13.5px; font-weight: 700; padding: 6px 12px; border-radius: 10px;
+    font-family: monospace; font-size: 12.5px; font-weight: 700; padding: 4px 8px; border-radius: 8px;
+    display: inline-block; margin-top: 2px;
 }
 
 .badge-sec {
-    background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;
-    font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+    background: #f1f5f9; color: #0284c7; border: 1px solid #cbd5e1;
+    font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px;
 }
 
 .btn-edit-action {
-    background: #e0f2fe; color: #0284c7; border: 1px solid rgba(2, 132, 199, 0.25);
-    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
-    transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px;
-    margin-right: 6px;
+    background: #0284c7; color: #ffffff; border: none;
+    padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 12.5px;
+    transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 5px;
+    box-shadow: 0 3px 8px rgba(2, 132, 199, 0.25); cursor: pointer;
 }
 .btn-edit-action:hover {
-    background: #0284c7; color: #ffffff;
-    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.3); transform: translateY(-1px);
+    background: #0369a1; color: #ffffff; transform: translateY(-1px);
 }
 
 .btn-delete-action {
-    background: #fff1f2; color: #e11d48; border: 1px solid rgba(225, 29, 72, 0.2);
-    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
-    transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 6px;
+    background: #dc2626; color: #ffffff; border: none;
+    padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 12.5px;
+    transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 5px;
+    box-shadow: 0 3px 8px rgba(220, 38, 38, 0.25); cursor: pointer; margin-left: 4px;
 }
 
 .btn-delete-action:hover {
-    background: #e11d48; color: #ffffff;
-    box-shadow: 0 6px 16px rgba(225, 29, 72, 0.3); transform: translateY(-1px);
+    background: #b91c1c; color: #ffffff; transform: translateY(-1px);
 }
 </style>
 </head>
@@ -181,22 +179,22 @@ body {
     <div id="alert-container"></div>
 
     <div class="content-card">
-        <h5 class="fw-bold text-dark mb-4"><i class="fa-solid fa-address-book text-primary me-2"></i> Registered Class Representatives</h5>
-        <div class="table-responsive rounded-4 border overflow-hidden">
-            <table class="table table-hover align-middle mb-0">
+        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-address-book text-primary me-2"></i> Registered Class Representatives</h5>
+        
+        <!-- Table with ALWAYS VISIBLE EDIT & DELETE BUTTONS ON SCREEN -->
+        <div class="rounded-3 border overflow-hidden">
+            <table class="table table-hover align-middle mb-0" style="table-layout: fixed; width: 100%;">
                 <thead class="table-custom-header">
                     <tr>
-                        <th class="py-3 px-4">CR Name</th>
-                        <th class="py-3">Roll Number</th>
-                        <th class="py-3">Year / Section</th>
-                        <th class="py-3">Email Address</th>
-                        <th class="py-3">Phone Number</th>
-                        <th class="py-3 text-center">Actions</th>
+                        <th style="width: 28%;" class="py-3 px-3">CR Name & Roll</th>
+                        <th style="width: 18%;" class="py-3">Year / Sec</th>
+                        <th style="width: 32%;" class="py-3">Email & Phone</th>
+                        <th style="width: 22%; text-align: center;" class="py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="cr-table-body">
                     <tr>
-                        <td colspan="6" class="text-center py-5 text-muted">Loading...</td>
+                        <td colspan="4" class="text-center py-5 text-muted">Loading CR accounts...</td>
                     </tr>
                 </tbody>
             </table>
@@ -208,8 +206,8 @@ body {
 <!-- ADD CR ACCOUNT MODAL -->
 <div class="modal fade" id="addCrModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
-            <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f2b46, #0d6efd); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px 28px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #0f2b46, #0d6efd); border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 18px 24px;">
                 <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2"></i> Add New CR Account</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -217,23 +215,23 @@ body {
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">CR Full Name *</label>
-                        <input type="text" name="name" class="form-control form-control-lg fs-6" placeholder="e.g. K. Rajesh" required style="border-radius: 12px;">
+                        <input type="text" name="name" class="form-control form-control-lg fs-6" placeholder="e.g. K. Rajesh" required style="border-radius: 10px;">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Roll Number / CR ID *</label>
-                        <input type="text" name="roll_number" class="form-control form-control-lg fs-6" placeholder="e.g. 21B91A1201" required style="border-radius: 12px;">
+                        <input type="text" name="roll_number" class="form-control form-control-lg fs-6" placeholder="e.g. 21B91A1201" required style="border-radius: 10px;">
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold text-dark">Year *</label>
-                            <select name="year" class="form-select form-select-lg fs-6" style="border-radius: 12px;">
+                            <select name="year" class="form-select form-select-lg fs-6" style="border-radius: 10px;">
                                 <option value="2">2nd Year</option>
                                 <option value="3">3rd Year</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold text-dark">Section *</label>
-                            <select name="section" class="form-select form-select-lg fs-6" style="border-radius: 12px;">
+                            <select name="section" class="form-select form-select-lg fs-6" style="border-radius: 10px;">
                                 <option value="IT2A">IT2A</option>
                                 <option value="IT2B">IT2B</option>
                                 <option value="IT2C">IT2C</option>
@@ -245,20 +243,20 @@ body {
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Email Address *</label>
-                        <input type="email" name="email" class="form-control form-control-lg fs-6" placeholder="e.g. crit2a@crr.ac.in" required style="border-radius: 12px;">
+                        <input type="email" name="email" class="form-control form-control-lg fs-6" placeholder="e.g. crit2a@crr.ac.in" required style="border-radius: 10px;">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Phone Number</label>
-                        <input type="text" name="phone" class="form-control form-control-lg fs-6" placeholder="e.g. 9876543210" style="border-radius: 12px;">
+                        <input type="text" name="phone" class="form-control form-control-lg fs-6" placeholder="e.g. 9876543210" style="border-radius: 10px;">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Password *</label>
-                        <input type="password" name="password" class="form-control form-control-lg fs-6" placeholder="Enter Login Password" required style="border-radius: 12px;">
+                        <input type="password" name="password" class="form-control form-control-lg fs-6" placeholder="Enter Login Password" required style="border-radius: 10px;">
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; padding: 18px 28px;">
-                    <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 12px;">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4 py-2 fw-bold" style="border-radius: 12px; background: linear-gradient(135deg, #0d6efd, #0369a1); border: none;">
+                <div class="modal-footer bg-light" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; padding: 16px 24px;">
+                    <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 10px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4 py-2 fw-bold" style="border-radius: 10px; background: linear-gradient(135deg, #0d6efd, #0369a1); border: none;">
                         <i class="fa-solid fa-user-plus me-1"></i> Save CR Account
                     </button>
                 </div>
@@ -270,8 +268,8 @@ body {
 <!-- EDIT CR ACCOUNT MODAL -->
 <div class="modal fade" id="editCrModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
-            <div class="modal-header text-white" style="background: linear-gradient(135deg, #0284c7, #0d6efd); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px 28px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #0284c7, #0d6efd); border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 18px 24px;">
                 <h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i> Edit CR Account Details</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
@@ -280,23 +278,23 @@ body {
                 <div class="modal-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">CR Full Name *</label>
-                        <input type="text" id="editName" name="name" class="form-control form-control-lg fs-6" required style="border-radius: 12px;">
+                        <input type="text" id="editName" name="name" class="form-control form-control-lg fs-6" required style="border-radius: 10px;">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Roll Number / CR ID *</label>
-                        <input type="text" id="editRoll" name="roll_number" class="form-control form-control-lg fs-6" required style="border-radius: 12px;">
+                        <input type="text" id="editRoll" name="roll_number" class="form-control form-control-lg fs-6" required style="border-radius: 10px;">
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold text-dark">Year *</label>
-                            <select id="editYear" name="year" class="form-select form-select-lg fs-6" style="border-radius: 12px;">
+                            <select id="editYear" name="year" class="form-select form-select-lg fs-6" style="border-radius: 10px;">
                                 <option value="2">2nd Year</option>
                                 <option value="3">3rd Year</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold text-dark">Section *</label>
-                            <select id="editSection" name="section" class="form-select form-select-lg fs-6" style="border-radius: 12px;">
+                            <select id="editSection" name="section" class="form-select form-select-lg fs-6" style="border-radius: 10px;">
                                 <option value="IT2A">IT2A</option>
                                 <option value="IT2B">IT2B</option>
                                 <option value="IT2C">IT2C</option>
@@ -308,20 +306,20 @@ body {
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Email Address *</label>
-                        <input type="email" id="editEmail" name="email" class="form-control form-control-lg fs-6" required style="border-radius: 12px;">
+                        <input type="email" id="editEmail" name="email" class="form-control form-control-lg fs-6" required style="border-radius: 10px;">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Phone Number</label>
-                        <input type="text" id="editPhone" name="phone" class="form-control form-control-lg fs-6" style="border-radius: 12px;">
+                        <input type="text" id="editPhone" name="phone" class="form-control form-control-lg fs-6" style="border-radius: 10px;">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-dark">Password (Leave blank to keep unchanged)</label>
-                        <input type="password" name="password" class="form-control form-control-lg fs-6" placeholder="Enter New Password (Optional)" style="border-radius: 12px;">
+                        <input type="password" name="password" class="form-control form-control-lg fs-6" placeholder="Enter New Password (Optional)" style="border-radius: 10px;">
                     </div>
                 </div>
-                <div class="modal-footer bg-light" style="border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; padding: 18px 28px;">
-                    <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 12px;">Cancel</button>
-                    <button type="submit" class="btn btn-success px-4 py-2 fw-bold" style="border-radius: 12px; background: linear-gradient(135deg, #16a34a, #15803d); border: none;">
+                <div class="modal-footer bg-light" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; padding: 16px 24px;">
+                    <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 10px;">Cancel</button>
+                    <button type="submit" class="btn btn-success px-4 py-2 fw-bold" style="border-radius: 10px; background: linear-gradient(135deg, #16a34a, #15803d); border: none;">
                         <i class="fa-solid fa-check me-1"></i> Update CR Account
                     </button>
                 </div>
@@ -356,24 +354,28 @@ body {
                     crAccountsList = data.data;
                     tbody.innerHTML = data.data.map(cr => `
                         <tr>
-                            <td class="px-4">
-                                <div class="d-flex align-items-center gap-3">
+                            <td class="px-3">
+                                <div class="d-flex align-items-center gap-2">
                                     <div class="cr-avatar">
                                         ${cr.name ? cr.name.charAt(0).toUpperCase() : '?'}
                                     </div>
-                                    <b class="text-dark fs-6">${cr.name || ''}</b>
+                                    <div>
+                                        <b class="text-dark d-block fs-6" style="line-height:1.2;">${cr.name || ''}</b>
+                                        <span class="badge-roll">${cr.roll_number || ''}</span>
+                                    </div>
                                 </div>
                             </td>
-                            <td><span class="badge-roll">${cr.roll_number || ''}</span></td>
                             <td><span class="badge-sec">Year ${cr.year || ''} - ${cr.section || ''}</span></td>
-                            <td><i class="fa-solid fa-envelope me-2 text-primary opacity-75"></i> ${cr.email || ''}</td>
-                            <td><i class="fa-solid fa-phone me-2 text-success opacity-75"></i> ${cr.phone || 'N/A'}</td>
+                            <td>
+                                <div class="small fw-semibold text-dark"><i class="fa-solid fa-envelope me-1 text-primary"></i> ${cr.email || 'N/A'}</div>
+                                <div class="small text-muted"><i class="fa-solid fa-phone me-1 text-success"></i> ${cr.phone || 'N/A'}</div>
+                            </td>
                             <td class="text-center">
                                 <button class="btn-edit-action" onclick="openEditCrModal(${cr.id})">
-                                    <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </button>
                                 <button class="btn-delete-action" onclick="deleteCr(${cr.id})">
-                                    <i class="fa-solid fa-trash me-1"></i> Delete
+                                    <i class="fa-solid fa-trash"></i> Delete
                                 </button>
                             </td>
                         </tr>
@@ -382,7 +384,7 @@ body {
                     crAccountsList = [];
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
+                            <td colspan="4" class="text-center py-5 text-muted">
                                 <i class="fa-solid fa-user-gear fs-1 text-primary opacity-50 mb-3 d-block"></i>
                                 <h5>No CR Accounts Found</h5>
                                 <p class="mb-0">Click <b>Add New CR Account</b> above to register a Class Representative.</p>
