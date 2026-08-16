@@ -43,11 +43,23 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 3. POST ADD SUBJECT
+// 3. POST ADD SUBJECT (With Automatic Session Fallbacks to prevent NULL year/section)
 router.post('/', requireAdminOrCR, async (req, res) => {
-    const { year, section, subject_name, subject_type } = req.body;
+    let { year, section, subject_name, subject_type } = req.body;
+
+    // Automatic fallbacks from session if year or section is omitted or null
+    if (!year || year.toString().trim() === '' || year === 'undefined' || year === 'null') {
+        year = req.session.cr_year || req.session.year || '2';
+    }
+    if (!section || section.toString().trim() === '' || section === 'undefined' || section === 'null') {
+        section = req.session.cr_section || req.session.section || 'IT2A';
+    }
+
     try {
-        await db.query("INSERT INTO subjects (year, section, subject_name, subject_type) VALUES (?, ?, ?, ?)", [year, section, subject_name, subject_type || 'Theory']);
+        await db.query(
+            "INSERT INTO subjects (year, section, subject_name, subject_type) VALUES (?, ?, ?, ?)",
+            [year, section, subject_name, subject_type || 'Theory']
+        );
         res.json({ success: true, message: 'Subject added successfully' });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
