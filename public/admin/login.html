@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRR-INFORMTECH | Admin Login</title>
+
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    height: 100vh; display: flex; justify-content: center; align-items: center;
+    background: url('/admin/college_bg.jpg') no-repeat center center/cover;
+    position: relative; overflow: hidden;
+}
+body::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px);
+}
+.login-container {
+    position: relative; z-index: 1; width: 100%; max-width: 480px;
+    padding: 20px; text-align: center;
+}
+.logo-box { margin-bottom: 12px; }
+.logo-box img {
+    width: 100px; height: 100px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.7));
+    animation: logoGlow 3s infinite alternate;
+}
+@keyframes logoGlow {
+    from { filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+    to { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); }
+}
+.college-title {
+    color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 1px;
+    text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.7); margin-bottom: 2px;
+}
+.college-sub {
+    color: #ff3333; font-weight: 700; font-size: 16px; margin-bottom: 4px;
+}
+.college-info {
+    color: #e0e0e0; font-size: 11.5px; font-weight: 500; margin-bottom: 18px; line-height: 1.4;
+}
+.dept-title {
+    color: #ffffff; font-weight: 800; font-size: 15px; letter-spacing: 1px; margin-bottom: 20px;
+}
+.login-card {
+    background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 20px;
+    padding: 30px 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+.form-group { text-align: left; margin-bottom: 16px; }
+.form-group label {
+    display: block; color: #ffffff; font-size: 13px; font-weight: 600; margin-bottom: 6px;
+}
+.form-control {
+    width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.95); font-size: 14px; font-weight: 500; outline: none;
+    transition: all 0.3s ease;
+}
+.form-control:focus { border-color: #0088ff; box-shadow: 0 0 10px rgba(0,136,255,0.5); }
+.checkbox-group {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 20px; color: #ffffff; font-size: 12.5px; font-weight: 500;
+}
+.btn-login {
+    width: 100%; padding: 13px; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%); color: #ffffff;
+    font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,114,255,0.4);
+}
+.btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,114,255,0.6); }
+.alert-danger {
+    background: rgba(255, 77, 77, 0.9); color: white; padding: 10px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <div class="logo-box">
+        <img src="/admin/logo.png" alt="CRR Logo">
+    </div>
+    <h1 class="college-title">SIR C R REDDY COLLEGE OF ENGINEERING</h1>
+    <div class="college-sub">(Autonomous)</div>
+    <div class="college-info">
+        ELURU, ANDHRA PRADESH 534007<br>
+        (Approved by AICTE, New Delhi | Affiliated to JNTUK, Kakinada)
+    </div>
+
+    <div class="login-card">
+        <div class="dept-title">
+            CRR-INFORMTECH<br>
+            <span style="font-size: 12px; font-weight: 500; opacity: 0.9;">DEPARTMENT OF INFORMATION TECHNOLOGY</span><br>
+            <span style="font-size: 11px; font-weight: 400; opacity: 0.8;">Administrator Login Portal</span>
+        </div>
+
+        <div id="error-alert" class="alert-danger" style="display: none;"></div>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label>Username / Email ID</label>
+                <input type="text" id="username" class="form-control" placeholder="Enter username or email" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="showPassword" onclick="togglePassword()">
+                <label for="showPassword" style="cursor: pointer; margin-bottom: 0;">Show Password</label>
+            </div>
+            <button type="submit" class="btn-login" id="loginBtn">Login</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const pwdInput = document.getElementById("password");
+    pwdInput.type = pwdInput.type === "password" ? "text" : "password";
+}
+
+document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorAlert = document.getElementById('error-alert');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    errorAlert.style.display = 'none';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Logging in...';
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const res = await fetch('/api/auth/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            window.location.href = '/admin/dashboard.html';
+        } else {
+            errorAlert.textContent = result.message;
+            errorAlert.style.display = 'block';
+        }
+    } catch(err) {
+        errorAlert.textContent = 'Server connection error. Please try again.';
+        errorAlert.style.display = 'block';
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
+    }
+});
+</script>
+</body>
+</html>

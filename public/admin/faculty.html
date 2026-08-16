@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faculty Directory | CRR-INFORMTECH</title>
+
+<!-- Bootstrap 5.3 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body {
+    background: #eef2f9;
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(13, 110, 253, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(3, 105, 161, 0.05) 0px, transparent 50%);
+    min-height: 100vh;
+}
+
+/* ================= Left Sidebar ================= */
+.sidebar {
+    position: fixed; left: 0; top: 0; width: 270px; height: 100vh;
+    background: linear-gradient(180deg, #0f2b46 0%, #0d6efd 100%);
+    color: white; padding-top: 25px; box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+    z-index: 100; overflow-y: auto;
+}
+
+.sidebar-header {
+    text-align: center; padding: 0 15px 22px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px;
+}
+
+.sidebar-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: contain; margin-bottom: 10px; }
+
+.sidebar-header h4 { font-weight: 800; font-size: 18px; margin: 0; letter-spacing: 0.5px; }
+.sidebar-header small { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+
+.sidebar a {
+    display: flex; align-items: center; gap: 14px; padding: 13px 25px;
+    color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 14px;
+    font-weight: 500; transition: all 0.25s ease; border-left: 4px solid transparent;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background: rgba(255, 255, 255, 0.14); color: #ffffff;
+    border-left-color: #38bdf8; padding-left: 28px;
+}
+
+.sidebar a.logout-btn {
+    margin-top: 30px; margin-bottom: 30px; color: #fcd34d;
+    border-top: 1px solid rgba(255, 255, 255, 0.12); padding-top: 18px;
+}
+
+/* ================= Main Content Area ================= */
+.main-content { margin-left: 270px; padding: 40px; }
+
+.page-header-card {
+    background: #ffffff; padding: 28px 32px; border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 35px; flex-wrap: wrap; gap: 20px;
+}
+
+.page-header-card h2 { font-weight: 800; color: #1e293b; margin: 0; }
+.page-header-card p { font-size: 13.5px; color: #64748b; margin: 0; }
+
+.card-fac {
+    background: #ffffff; border-radius: 20px; padding: 28px 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; height: 100%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border-top: 4px solid #0d6efd;
+}
+.card-fac:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(0,0,0,0.08); }
+
+.fac-avatar-placeholder {
+    width: 75px; height: 75px; border-radius: 50%;
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0284c7;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 800; border: 3px solid #0d6efd;
+    margin: 0 auto 16px auto; box-shadow: 0 6px 18px rgba(2,132,199,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<!-- Left Sidebar Navigation -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="/admin/logo.png" class="sidebar-logo" alt="CRR Logo">
+        <h4>CRR INFORMTECH</h4>
+        <small>Department of IT</small>
+    </div>
+
+    <a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="years.html"><i class="fa-solid fa-calendar-days"></i> Academic Years</a>
+    <a href="manage_cr.html"><i class="fa-solid fa-user-gear"></i> Manage CR Accounts</a>
+    <a href="faculty.html" class="active"><i class="fa-solid fa-chalkboard-user"></i> Faculty Directory</a>
+    <a href="announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+    <a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+    <a href="#" id="logout-btn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+
+    <div class="page-header-card">
+        <div>
+            <h2><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Faculty Directory</h2>
+            <p>Manage Information Technology department faculty members & subjects</p>
+        </div>
+        <button class="btn btn-primary px-4 py-2.5 fw-bold" data-bs-toggle="modal" data-bs-target="#addFacultyModal" style="border-radius: 12px; box-shadow: 0 6px 18px rgba(13,110,253,0.25);">
+            <i class="fa-solid fa-user-plus me-2"></i> Add Faculty Member
+        </button>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <div class="row g-4" id="faculty-container">
+        <!-- Loaded via JS -->
+    </div>
+
+</div>
+
+<!-- ADD FACULTY MODAL (ONLY NAME & SUBJECT) -->
+<div class="modal fade" id="addFacultyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px;">
+            <div class="modal-header bg-primary text-white" style="border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2"></i> Add New Faculty Member</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addFacultyForm">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Faculty Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Dr. S. Krishna Rao" required style="border-radius: 10px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Subject / Designation *</label>
+                        <input type="text" name="designation" class="form-control" placeholder="e.g. Software Engineering / HOD" required style="border-radius: 10px;">
+                    </div>
+                </div>
+                <div class="modal-footer bg-light" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;">
+                    <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal" style="border-radius: 10px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold" style="border-radius: 10px;"><i class="fa-solid fa-save me-1"></i> Save Faculty</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showAlert(type, message) {
+        const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <i class="fa-solid ${icon} me-2"></i> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        document.getElementById('alert-container').innerHTML = alertHtml;
+    }
+
+    async function loadFaculty() {
+        try {
+            const response = await fetch('/api/admin/faculty');
+            if (response.status === 401) {
+                window.location.href = '/admin/login.html';
+                return;
+            }
+            const data = await response.json();
+            const container = document.getElementById('faculty-container');
+            
+            if (data.success && data.data && data.data.length > 0) {
+                container.innerHTML = data.data.map(fac => `
+                    <div class="col-md-4 col-lg-4">
+                        <div class="card-fac text-center">
+                            <div>
+                                <div class="fac-avatar-placeholder">
+                                    ${fac.name ? fac.name.charAt(0).toUpperCase() : '?'}
+                                </div>
+                                <h5 class="fw-bold text-dark mb-2">${fac.name || ''}</h5>
+                                <span class="badge bg-primary px-3 py-1.5 font-semibold" style="border-radius: 20px; font-size: 13px;">
+                                    <i class="fa-solid fa-book-open me-1"></i> ${fac.designation || ''}
+                                </span>
+                            </div>
+                            <div class="mt-4">
+                                <button onclick="deleteFaculty(${fac.id})" class="btn btn-sm btn-outline-danger w-100 py-2 fw-semibold" style="border-radius: 10px;">
+                                    <i class="fa-solid fa-trash me-1"></i> Remove Faculty
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5 bg-white rounded-4 shadow-sm p-4">
+                        <i class="fa-solid fa-chalkboard-user fs-1 text-primary opacity-50 mb-3 d-block"></i>
+                        <h5 class="fw-bold text-dark">No Faculty Members Found</h5>
+                        <p class="text-muted mb-0">Click <b>Add Faculty Member</b> above to enter faculty name and subject.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error loading faculty:', error);
+            showAlert('danger', 'Failed to load faculty directory.');
+        }
+    }
+
+    async function deleteFaculty(id) {
+        if (!confirm('Are you sure you want to delete this faculty member?')) return;
+        
+        try {
+            const response = await fetch(`/api/admin/faculty/${id}`, { method: 'DELETE' });
+            const data = await response.json();
+            
+            if (data.success) {
+                showAlert('success', 'Faculty profile deleted successfully!');
+                loadFaculty();
+            } else {
+                showAlert('danger', data.message || 'Failed to delete faculty profile.');
+            }
+        } catch (error) {
+            showAlert('danger', 'An error occurred while deleting.');
+        }
+    }
+
+    document.getElementById('addFacultyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const jsonData = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/api/admin/faculty', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('addFacultyModal')).hide();
+                e.target.reset();
+                showAlert('success', data.message || `Faculty profile for ${jsonData.name} added successfully!`);
+                loadFaculty();
+            } else {
+                showAlert('danger', data.message || 'Failed to add faculty member.');
+            }
+        } catch (error) {
+            showAlert('danger', 'An error occurred while adding faculty member.');
+        }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/admin/login.html';
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", loadFaculty);
+</script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Settings | CRR-INFORMTECH</title>
+<!-- Bootstrap 5.3 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #f4f7fc; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+    position: fixed; left: 0; top: 0; width: 270px; height: 100vh;
+    background: linear-gradient(180deg, #0f2b46 0%, #0d6efd 100%);
+    color: white; padding-top: 25px; box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+    z-index: 100; overflow-y: auto;
+}
+.sidebar-header {
+    text-align: center; padding: 0 15px 22px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px;
+}
+.sidebar-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: contain; margin-bottom: 10px; }
+.sidebar-header h4 { font-weight: 800; font-size: 18px; margin: 0; letter-spacing: 0.5px; }
+.sidebar-header small { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+
+.sidebar a {
+    display: flex; align-items: center; gap: 14px; padding: 13px 25px;
+    color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 14px;
+    font-weight: 500; transition: all 0.25s ease; border-left: 4px solid transparent;
+}
+.sidebar a:hover, .sidebar a.active {
+    background: rgba(255, 255, 255, 0.14); color: #ffffff;
+    border-left-color: #38bdf8; padding-left: 28px;
+}
+
+/* Main Content */
+.main-content { margin-left: 270px; padding: 40px; }
+
+.header-card {
+    background: #ffffff; padding: 28px 36px; border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.settings-card {
+    background: #ffffff; border-radius: 20px; padding: 32px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
+    height: 100%;
+}
+
+/* Input Password Box with Eye Icon */
+.password-box-group { position: relative; }
+.password-toggle-icon {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    cursor: pointer; color: #94a3b8; font-size: 16px; transition: color 0.2s; z-index: 10;
+}
+.password-toggle-icon:hover { color: #0d6efd; }
+</style>
+</head>
+<body>
+
+<!-- Left Sidebar Navigation -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="/admin/logo.png" class="sidebar-logo" alt="CRR Logo">
+        <h4>CRR INFORMTECH</h4>
+        <small>DEPARTMENT ADMINISTRATOR</small>
+    </div>
+    <a href="/admin/dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="/admin/years.html"><i class="fa-solid fa-calendar-days"></i> Academic Years</a>
+    <a href="/admin/syllabus.html"><i class="fa-solid fa-file-pdf"></i> Department Syllabus</a>
+    <a href="/admin/manage_cr.html"><i class="fa-solid fa-user-gear"></i> Manage CR Accounts</a>
+    <a href="/admin/faculty.html"><i class="fa-solid fa-chalkboard-user"></i> Faculty Directory</a>
+    <a href="/admin/announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+    <a href="/admin/settings.html" class="active"><i class="fa-solid fa-gear"></i> Settings</a>
+    <a id="logout-btn" style="cursor:pointer; margin-top:30px; padding:13px 25px; color:#fcd34d; display:block;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+    <div class="header-card">
+        <h2 class="fw-bold text-dark mb-1">Admin Portal Settings <i class="fa-solid fa-gear text-primary ms-1"></i></h2>
+        <p class="text-muted mb-0">Manage Admin security, login email/username, and password</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Update Admin Credentials Form -->
+        <div class="col-md-7">
+            <div class="settings-card">
+                <h4 class="fw-bold text-dark mb-4"><i class="fa-solid fa-user-shield text-primary me-2"></i> Update Admin Credentials</h4>
+                
+                <div id="alert-msg"></div>
+
+                <form id="settingsForm">
+                    <!-- Admin Username / Email Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Admin Username / Email ID *</label>
+                        <input type="text" id="admin_username" class="form-control form-control-lg fs-6" placeholder="Enter new username or email address" required style="border-radius: 12px;">
+                        <small class="text-muted">Enter your Email ID here to use it as your Login Username.</small>
+                    </div>
+
+                    <!-- New Password Field with Eye Icon Toggle -->
+                    <div class="mb-3 mt-4">
+                        <label class="form-label fw-semibold">New Password (Optional)</label>
+                        <div class="password-box-group">
+                            <input type="password" id="new_password" class="form-control form-control-lg fs-6 pe-5" placeholder="Leave blank to keep current password" style="border-radius: 12px;">
+                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePasswordVisibility('new_password', this)"></i>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password Field with Eye Icon Toggle -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Confirm New Password</label>
+                        <div class="password-box-group">
+                            <input type="password" id="confirm_password" class="form-control form-control-lg fs-6 pe-5" placeholder="Re-enter new password" style="border-radius: 12px;">
+                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePasswordVisibility('confirm_password', this)"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary fw-bold px-4 py-2.5" id="save-btn" style="border-radius: 12px;">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Save Admin Credentials
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Portal System Info -->
+        <div class="col-md-5">
+            <div class="settings-card">
+                <h4 class="fw-bold text-dark mb-4"><i class="fa-solid fa-sliders text-success me-2"></i> Portal System Info</h4>
+
+                <div class="mb-3 pb-3 border-bottom d-flex justify-content-between align-items-center">
+                    <span class="text-muted fw-semibold"><i class="fa-solid fa-building me-2 text-primary"></i> Institution</span>
+                    <span class="fw-bold text-dark text-end">Sir C.R. Reddy College of Engineering</span>
+                </div>
+
+                <div class="mb-3 pb-3 border-bottom d-flex justify-content-between align-items-center">
+                    <span class="text-muted fw-semibold"><i class="fa-solid fa-graduation-cap me-2 text-success"></i> Department</span>
+                    <span class="fw-bold text-dark">Information Technology (IT)</span>
+                </div>
+
+                <div class="mb-3 pb-3 border-bottom d-flex justify-content-between align-items-center">
+                    <span class="text-muted fw-semibold"><i class="fa-solid fa-database me-2 text-warning"></i> Database Status</span>
+                    <span class="badge bg-success px-3 py-1">Connected (crr_informtech)</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted fw-semibold"><i class="fa-solid fa-server me-2 text-info"></i> Server Port</span>
+                    <span class="badge bg-primary px-3 py-1">Port 3000 Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Eye Toggle Function
+function togglePasswordVisibility(inputId, iconEl) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        iconEl.classList.remove("fa-eye");
+        iconEl.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        iconEl.classList.remove("fa-eye-slash");
+        iconEl.classList.add("fa-eye");
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('/api/admin/dashboard-stats');
+        const result = await res.json();
+        if (result.success && result.data.username) {
+            document.getElementById('admin_username').value = result.data.username;
+        }
+    } catch(e) { console.error(e); }
+});
+
+document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const alertMsg = document.getElementById('alert-msg');
+    const saveBtn = document.getElementById('save-btn');
+
+    const new_username = document.getElementById('admin_username').value;
+    const new_password = document.getElementById('new_password').value;
+    const confirm_password = document.getElementById('confirm_password').value;
+
+    if (new_password && new_password !== confirm_password) {
+        alertMsg.innerHTML = `<div class="alert alert-danger py-2 px-3 small rounded-3 mb-3"><i class="fa-solid fa-circle-exclamation me-1"></i> Passwords do not match!</div>`;
+        return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Saving...`;
+
+    try {
+        const res = await fetch('/api/admin/update-credentials', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ new_username, new_password, confirm_password })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            alertMsg.innerHTML = `<div class="alert alert-success py-2 px-3 small rounded-3 mb-3"><i class="fa-solid fa-circle-check me-1"></i> ${result.message}</div>`;
+            document.getElementById('new_password').value = '';
+            document.getElementById('confirm_password').value = '';
+        } else {
+            alertMsg.innerHTML = `<div class="alert alert-danger py-2 px-3 small rounded-3 mb-3"><i class="fa-solid fa-circle-exclamation me-1"></i> ${result.message}</div>`;
+        }
+    } catch(err) {
+        alertMsg.innerHTML = `<div class="alert alert-danger py-2 px-3 small rounded-3 mb-3"><i class="fa-solid fa-circle-exclamation me-1"></i> An error occurred while saving.</div>`;
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk me-1"></i> Save Admin Credentials`;
+    }
+});
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    window.location.href = '/admin/login.html';
+});
+</script>
+</body>
+</html>

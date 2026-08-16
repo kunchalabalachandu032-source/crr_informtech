@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal | CRR-INFORMTECH</title>
+<!-- Bootstrap 5.3 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: url('/admin/college_bg.jpg') no-repeat center center fixed;
+    background-size: cover; min-height: 100vh; position: relative;
+}
+body::before {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10, 25, 47, 0.55); backdrop-filter: blur(2px); z-index: 0;
+}
+
+.sidebar, .main-content, #cr-back-banner, .sidebar-toggle-btn { position: relative; z-index: 1; }
+
+.sidebar-toggle-btn {
+    position: fixed; top: 22px; left: 245px; height: 40px; padding: 0 16px;
+    border-radius: 12px; background: rgba(13, 110, 253, 0.9); backdrop-filter: blur(10px);
+    color: #ffffff; border: 1.5px solid rgba(255,255,255,0.4); display: flex;
+    align-items: center; gap: 8px; font-weight: 700; font-size: 13px;
+    cursor: pointer; z-index: 1050; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.35s ease-in-out;
+}
+.sidebar-toggle-btn:hover { background: #0062cc; border-color: #ffffff; transform: translateY(-2px); }
+.sidebar-toggle-btn.collapsed { left: 15px; }
+
+.sidebar {
+    position: fixed; left: 0; top: 0; width: 270px; height: 100vh;
+    background: linear-gradient(180deg, rgba(15, 43, 70, 0.95) 0%, rgba(13, 110, 253, 0.95) 100%);
+    backdrop-filter: blur(12px); color: white; padding-top: 25px;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3); z-index: 100; overflow-y: auto;
+    transition: all 0.35s ease-in-out;
+}
+.sidebar.collapsed { transform: translateX(-270px); }
+
+.sidebar-header {
+    text-align: center; padding: 0 15px 22px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 20px;
+}
+.sidebar-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: contain; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.6)); }
+.sidebar-header h4 { font-weight: 800; font-size: 18px; margin: 0; letter-spacing: 0.5px; color: #ffffff; }
+.sidebar-header small { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 1px; color: #38bdf8; }
+
+.sidebar a {
+    display: flex; align-items: center; gap: 14px; padding: 14px 25px;
+    color: rgba(255, 255, 255, 0.9); text-decoration: none; font-size: 14px;
+    font-weight: 500; transition: all 0.25s ease; border-left: 4px solid transparent; cursor: pointer;
+}
+.sidebar a:hover, .sidebar a.active {
+    background: rgba(255, 255, 255, 0.18); color: #ffffff;
+    border-left-color: #38bdf8; padding-left: 28px;
+}
+
+.main-content { margin-left: 270px; padding: 40px; transition: margin-left 0.35s ease-in-out; }
+.main-content.expanded { margin-left: 30px !important; }
+
+.header-card {
+    background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3); padding: 28px 36px; border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25); margin-bottom: 30px;
+}
+.header-card h2 { color: #ffffff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.header-card p { color: rgba(255, 255, 255, 0.85); }
+
+.subject-card {
+    background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 24px; padding: 28px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25); transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; position: relative;
+}
+.subject-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.35); border-color: rgba(255, 255, 255, 0.5); }
+.subject-card h4 { color: #ffffff !important; text-shadow: 0 2px 8px rgba(0,0,0,0.4); font-weight: 700; }
+
+.yellow-dot-badge {
+    position: absolute; top: 16px; left: 16px; width: 14px; height: 14px;
+    background-color: #ffcc00; border-radius: 50%; border: 2px solid #ffffff;
+    box-shadow: 0 0 12px #ffcc00; animation: pulseYellow 1.8s infinite; z-index: 10;
+}
+@keyframes pulseYellow {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.8); }
+    70% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(255, 204, 0, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+}
+
+.badge-theory { background: #e0f2fe; color: #0284c7; font-weight: 700; font-size: 11px; padding: 5px 12px; border-radius: 12px; }
+.badge-lab { background: #fef3c7; color: #d97706; font-weight: 700; font-size: 11px; padding: 5px 12px; border-radius: 12px; }
+
+.btn-glass-white {
+    background: rgba(255, 255, 255, 0.22); backdrop-filter: blur(10px);
+    color: #ffffff; border: 1.5px solid rgba(255, 255, 255, 0.45);
+    border-radius: 14px; font-weight: 700; font-size: 14.5px;
+    padding: 12px 20px; transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-decoration: none;
+    display: block; text-align: center;
+}
+.btn-glass-white:hover {
+    background: rgba(255, 255, 255, 0.4); color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.7); transform: translateY(-2px);
+}
+
+.cr-card, .glass-info-card {
+    background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 24px; padding: 28px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25); text-align: center; height: 100%; color: white;
+}
+.cr-avatar { width: 70px; height: 70px; border-radius: 50%; background: #0d6efd; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin-bottom: 15px; }
+
+.syllabus-row {
+    background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 16px;
+    padding: 20px 24px; margin-top: 14px; transition: transform 0.2s ease;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; color: #ffffff;
+}
+.syllabus-row h6 { color: #ffffff !important; font-weight: 700; }
+.syllabus-row p { color: rgba(255, 255, 255, 0.85) !important; }
+
+.btn-glass-btn {
+    background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px);
+    color: #ffffff !important; border: 1.5px solid rgba(255, 255, 255, 0.45);
+    border-radius: 12px; font-weight: 700; font-size: 13.5px;
+    padding: 9px 18px; transition: all 0.25s ease; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-glass-btn:hover { background: rgba(255, 255, 255, 0.45); transform: translateY(-2px); }
+.section-title { color: #ffffff; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+    <i class="fa-solid fa-bars"></i>
+    <span>Menu</span>
+</button>
+
+<div id="cr-back-banner" class="d-none bg-dark text-white py-2 px-4 d-flex justify-content-between align-items-center" style="position: fixed; top:0; left:0; width:100%; z-index:1000;">
+    <span class="small"><i class="fa-solid fa-eye me-2 text-warning"></i> <b>Preview Mode:</b> Viewing Student Portal as Class Representative</span>
+    <a href="/cr/dashboard.html" class="btn btn-sm btn-warning fw-bold px-3"><i class="fa-solid fa-arrow-left me-1"></i> Back to CR Dashboard</a>
+</div>
+
+<div class="sidebar" id="sidebar-menu">
+    <div class="sidebar-header">
+        <img src="/admin/logo.png" class="sidebar-logo" alt="CRR Logo">
+        <h4>CRR INFORMTECH</h4>
+        <small id="sidebar-year-text">STUDENT PORTAL</small>
+    </div>
+
+    <a onclick="switchView('subjects', this)" id="nav-subjects" class="active"><i class="fa-solid fa-book"></i> Subjects & Materials</a>
+    <a onclick="switchView('syllabus', this)" id="nav-syllabus"><i class="fa-solid fa-file-pdf"></i> Department Syllabus</a>
+    <a onclick="switchView('crs', this)" id="nav-crs"><i class="fa-solid fa-user-graduate"></i> Class Representatives</a>
+    <a href="/student/index.html" class="mt-4 text-warning"><i class="fa-solid fa-rotate me-1"></i> Change Section</a>
+</div>
+
+<div class="main-content" id="main-container">
+    <div class="header-card">
+        <h2 class="fw-bold mb-1" id="portal-title">Year 2 (IT2A) Student Portal</h2>
+        <p class="mb-0">Access course materials, department syllabus, and info</p>
+    </div>
+
+    <div id="view-subjects">
+        <div class="row g-4" id="subjects-container">
+            <div class="text-center py-5 text-white"><i class="fa-solid fa-spinner fa-spin fs-3"></i> Loading subjects...</div>
+        </div>
+    </div>
+
+    <div id="view-syllabus" class="d-none">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-info-card p-3 rounded-4 shadow-sm border text-start">
+                    <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-book-open text-primary me-1"></i> Select Subject</h6>
+                    <div id="syllabus-subject-list"><div class="text-center py-3 text-white-50">Loading subjects...</div></div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div id="syllabus-details-container">
+                    <div class="glass-info-card p-5 rounded-4 shadow-sm border text-center text-white-50">
+                        <i class="fa-solid fa-file-pdf fs-1 text-primary mb-2 d-block opacity-50"></i>
+                        <h5 class="text-white">Select a Subject from the Left List</h5>
+                        <p class="mb-0">Click any subject to view syllabus PDFs and Google Drive links.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-crs" class="d-none">
+        <h5 class="section-title mb-3"><i class="fa-solid fa-user-graduate me-2"></i> Section Class Representatives</h5>
+        <div class="row g-4" id="crs-container">
+            <div class="text-center py-5 text-white"><i class="fa-solid fa-spinner fa-spin fs-3"></i> Loading CR details...</div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const year = params.get('year') || '2';
+const section = params.get('section') || 'IT2A';
+const isFromCr = params.get('from') === 'cr';
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar-menu');
+    const mainContent = document.getElementById('main-container');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+
+    sidebar.classList.toggle('collapsed');
+    mainContent.classList.toggle('expanded');
+    toggleBtn.classList.toggle('collapsed');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (isFromCr) {
+        document.getElementById('cr-back-banner').classList.remove('d-none');
+        document.getElementById('main-container').style.marginTop = '45px';
+        document.getElementById('sidebar-menu').style.marginTop = '45px';
+        document.getElementById('sidebar-toggle-btn').style.top = '70px';
+    }
+
+    document.getElementById('portal-title').textContent = `Year ${year} (${section}) Student Portal`;
+    document.getElementById('sidebar-year-text').textContent = `Year ${year} - ${section}`;
+
+    loadSubjects();
+    loadCRs();
+});
+
+function switchView(viewName, element) {
+    document.querySelectorAll('#view-subjects, #view-syllabus, #view-crs').forEach(div => div.classList.add('d-none'));
+    document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+
+    document.getElementById(`view-${viewName}`).classList.remove('d-none');
+    if (element) element.classList.add('active');
+}
+
+async function loadSubjects() {
+    const res = await fetch(`/api/student/subjects?year=${year}&section=${encodeURIComponent(section)}`);
+    const data = await res.json();
+
+    let countsMap = {};
+    try {
+        const cRes = await fetch(`/api/student/resource-counts?year=${year}&section=${encodeURIComponent(section)}`);
+        const cData = await cRes.json();
+        if (cData.success) countsMap = cData.counts || {};
+    } catch(e){}
+
+    const container = document.getElementById('subjects-container');
+    const sylSubList = document.getElementById('syllabus-subject-list');
+
+    if (data.success && data.data.length > 0) {
+        container.innerHTML = data.data.map(s => {
+            const currentTotalCount = countsMap[s.subject_name.trim()] || 0;
+            const seenCount = localStorage.getItem(`seen_cnt_${s.subject_name.trim()}`);
+            
+            // Show Yellow Dot ONLY IF currentTotalCount > seenCount
+            const showYellowDot = (seenCount === null && currentTotalCount > 0) || (seenCount !== null && currentTotalCount > parseInt(seenCount));
+
+            return `
+                <div class="col-md-6 col-lg-4">
+                    <div class="subject-card">
+                        ${showYellowDot ? `<span class="yellow-dot-badge" title="New Material Added!"></span>` : ''}
+                        <span class="${s.subject_type === 'Lab' ? 'badge-lab' : 'badge-theory'} mb-3 d-inline-block">
+                            <i class="fa-solid ${s.subject_type === 'Lab' ? 'fa-flask' : 'fa-book'} me-1"></i> ${s.subject_type.toUpperCase()}
+                        </span>
+                        <h4 class="fw-bold text-white mb-4 fs-3">${s.subject_name}</h4>
+                        <a href="/student/subject_details.html?year=${year}&section=${encodeURIComponent(section)}&subject=${encodeURIComponent(s.subject_name)}&type=${s.subject_type}" class="btn-glass-white" onclick="markSubjectAsViewed('${s.subject_name.trim()}', ${currentTotalCount})">
+                            View Resources <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        sylSubList.innerHTML = data.data.map((s, idx) => `
+            <div class="p-2.5 rounded-3 mb-2 fw-semibold text-white cursor-pointer bg-white bg-opacity-10 border border-light border-opacity-25" style="cursor:pointer;" onclick="loadStudentSyllabus('${s.subject_name}', this)">
+                <i class="fa-solid ${s.subject_type === 'Lab' ? 'fa-flask text-warning' : 'fa-book text-primary'} me-2"></i> ${s.subject_name}
+            </div>
+        `).join('');
+
+        loadStudentSyllabus(data.data[0].subject_name, sylSubList.querySelector('div'));
+
+    } else {
+        container.innerHTML = `<div class="p-4 text-white glass-info-card text-center">No subjects found for Year ${year} (${section}).</div>`;
+        sylSubList.innerHTML = `<div class="text-white-50 small p-2">No subjects found.</div>`;
+    }
+}
+
+function markSubjectAsViewed(subName, totalCount) {
+    localStorage.setItem(`seen_cnt_${subName}`, totalCount.toString());
+}
+
+async function loadStudentSyllabus(subName, el) {
+    if (el) {
+        document.querySelectorAll('#syllabus-subject-list div').forEach(d => d.classList.remove('bg-primary', 'text-white'));
+        el.classList.add('bg-primary', 'text-white');
+    }
+
+    const container = document.getElementById('syllabus-details-container');
+    container.innerHTML = `<div class="text-center py-4 text-white"><i class="fa-solid fa-spinner fa-spin me-1"></i> Loading syllabus for ${subName}...</div>`;
+
+    const res = await fetch(`/api/syllabus?year=${year}&subject=${encodeURIComponent(subName)}`);
+    const data = await res.json();
+
+    if (data.success && data.data.length > 0) {
+        container.innerHTML = `
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-file-pdf text-danger me-2"></i> ${subName} Syllabus</h5>
+            ${data.data.map(item => `
+                <div class="syllabus-row">
+                    <div>
+                        <h6 class="fw-bold mb-1">${item.title}</h6>
+                        <p class="small mb-0">${item.description || ''}</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        ${item.file_path ? `<a href="/${item.file_path}" target="_blank" class="btn-glass-btn"><i class="fa-solid fa-download me-1"></i> Download File</a>` : ''}
+                        ${item.drive_link ? `<a href="${item.drive_link}" target="_blank" class="btn-glass-btn"><i class="fa-solid fa-link me-1"></i> Drive Link</a>` : ''}
+                    </div>
+                </div>
+            `).join('')}
+        `;
+    } else {
+        container.innerHTML = `<div class="glass-info-card p-5 rounded-4 shadow-sm border text-center text-white-50"><h5>No Syllabus Uploaded for ${subName} Yet</h5></div>`;
+    }
+}
+
+async function loadCRs() {
+    const res = await fetch(`/api/student/crs?year=${year}&section=${encodeURIComponent(section)}`);
+    const data = await res.json();
+    const container = document.getElementById('crs-container');
+
+    if (data.success && data.data.length > 0) {
+        container.innerHTML = data.data.map(cr => `
+            <div class="col-md-4">
+                <div class="cr-card">
+                    <div class="cr-avatar">${cr.name ? cr.name.charAt(0).toUpperCase() : 'C'}</div>
+                    <h5 class="fw-bold text-white mb-1">${cr.name}</h5>
+                    <span class="badge bg-primary px-3 py-1 mb-2 d-inline-block">${cr.roll_number || 'Class Representative'}</span>
+                    <p class="text-white-50 small mb-1"><i class="fa-solid fa-envelope me-1"></i> ${cr.email || 'N/A'}</p>
+                    <p class="text-white-50 small mb-0"><i class="fa-solid fa-phone me-1"></i> ${cr.phone || 'N/A'}</p>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        container.innerHTML = `<div class="p-4 text-white glass-info-card text-center">No Class Representative details found for Year ${year} (${section}).</div>`;
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Department Syllabus | CRR-INFORMTECH</title>
+<!-- Bootstrap 5.3 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #f4f7fc; min-height: 100vh; }
+
+/* Admin Sidebar */
+.sidebar {
+    position: fixed; left: 0; top: 0; width: 270px; height: 100vh;
+    background: linear-gradient(180deg, #0f2b46 0%, #0d6efd 100%);
+    color: white; padding-top: 25px; box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+    z-index: 100; overflow-y: auto;
+}
+.sidebar-header {
+    text-align: center; padding: 0 15px 22px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px;
+}
+.sidebar-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: contain; margin-bottom: 10px; }
+.sidebar-header h4 { font-weight: 800; font-size: 18px; margin: 0; letter-spacing: 0.5px; }
+.sidebar-header small { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+
+.sidebar a {
+    display: flex; align-items: center; gap: 14px; padding: 13px 25px;
+    color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 14px;
+    font-weight: 500; transition: all 0.25s ease; border-left: 4px solid transparent;
+}
+.sidebar a:hover, .sidebar a.active {
+    background: rgba(255, 255, 255, 0.14); color: #ffffff;
+    border-left-color: #38bdf8; padding-left: 28px;
+}
+
+/* Secondary Sub-Sidebar: All Subjects List (Left Side) */
+.subjects-sub-sidebar {
+    position: fixed; left: 270px; top: 0; width: 290px; height: 100vh;
+    background: #ffffff; border-right: 1px solid #e2e8f0; padding: 25px 18px;
+    z-index: 90; overflow-y: auto;
+}
+.year-tab-btn {
+    width: 50%; padding: 10px; font-weight: 700; border-radius: 10px; font-size: 13px;
+    border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; transition: all 0.2s;
+}
+.year-tab-btn.active {
+    background: #0d6efd; color: white; border-color: #0d6efd; box-shadow: 0 4px 12px rgba(13,110,253,0.25);
+}
+.subject-item-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 16px; border-radius: 12px; margin-bottom: 8px;
+    color: #334155; font-weight: 600; font-size: 13.5px; cursor: pointer; transition: all 0.2s;
+    background: #f8fafc; border: 1px solid #f1f5f9;
+}
+.subject-item-link:hover, .subject-item-link.active {
+    background: #e0f2fe; color: #0284c7; border-color: #bae6fd; font-weight: 700;
+}
+
+/* Main Content Area */
+.main-content { margin-left: 560px; padding: 40px; }
+
+.header-card {
+    background: #ffffff; padding: 28px 32px; border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+}
+.syllabus-card {
+    background: #ffffff; border-radius: 18px; padding: 24px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+}
+</style>
+</head>
+<body>
+
+<!-- Left Primary Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <img src="/admin/logo.png" class="sidebar-logo" alt="CRR Logo">
+        <h4>CRR INFORMTECH</h4>
+        <small>DEPARTMENT ADMINISTRATOR</small>
+    </div>
+    <a href="/admin/dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="/admin/years.html"><i class="fa-solid fa-calendar-days"></i> Academic Years</a>
+    <a href="/admin/syllabus.html" class="active"><i class="fa-solid fa-file-pdf"></i> Syllabus</a>
+    <a href="/admin/manage_cr.html"><i class="fa-solid fa-user-gear"></i> Manage CR Accounts</a>
+    <a href="/admin/faculty.html"><i class="fa-solid fa-chalkboard-user"></i> Faculty Directory</a>
+    <a href="/admin/announcements.html"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+    <a href="/admin/settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+    <a id="logout-btn" style="cursor:pointer; margin-top:30px; padding:13px 25px; color:#fcd34d; display:block;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<!-- Left Secondary Sub-Sidebar: Admin & CR Subjects List -->
+<div class="subjects-sub-sidebar">
+    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-book-open text-primary me-1"></i> All Subjects</h6>
+    
+    <!-- Year Selector -->
+    <div class="d-flex gap-2 mb-3">
+        <button class="year-tab-btn active" id="btn-yr2" onclick="switchYear('2')">2nd Year</button>
+        <button class="year-tab-btn" id="btn-yr3" onclick="switchYear('3')">3rd Year</button>
+    </div>
+
+    <!-- Subjects Navigation Links -->
+    <div id="subject-menu-container">
+        <div class="text-center py-4 text-muted"><i class="fa-solid fa-spinner fa-spin me-1"></i> Loading subjects...</div>
+    </div>
+</div>
+
+<!-- Main Right Side Area -->
+<div class="main-content">
+    <div class="header-card">
+        <div>
+            <span class="badge bg-primary px-3 py-1 text-white fw-bold mb-2 d-inline-block" style="border-radius:20px; font-size:11px;" id="year-tag-badge">2ND YEAR</span>
+            <h2 class="fw-bold text-dark mb-1" id="selected-subject-title">Select a Subject</h2>
+            <p class="text-muted mb-0">Upload or view syllabus PDF, Excel sheet, or Google Drive link</p>
+        </div>
+        <button class="btn btn-primary fw-bold px-4 py-2.5" data-bs-toggle="modal" data-bs-target="#addSyllabusModal" style="border-radius: 12px;">
+            <i class="fa-solid fa-plus-circle me-1"></i> Add Syllabus
+        </button>
+    </div>
+
+    <!-- Syllabus Items List for Selected Subject -->
+    <div id="syllabus-items-list">
+        <div class="text-center py-5 text-muted bg-white rounded-4 shadow-sm p-4">
+            <i class="fa-solid fa-file-pdf fs-1 text-primary opacity-50 mb-2 d-block"></i>
+            <h5>Select a Subject from the Left Menu</h5>
+            <p class="mb-0">Click any subject on the left side to view or upload its syllabus.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ADD / UPLOAD SYLLABUS MODAL -->
+<div class="modal fade" id="addSyllabusModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 18px;">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-circle-plus me-2"></i> Add Subject Syllabus</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addSyllabusForm" enctype="multipart/form-data">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Syllabus Title *</label>
+                        <input type="text" id="s_title" class="form-control" placeholder="e.g. Regulation Syllabus / Unit Breakdown" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description / Unit Details</label>
+                        <textarea id="s_description" class="form-control" rows="3" placeholder="Enter syllabus details..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Google Drive / Resource Link (Optional)</label>
+                        <input type="url" id="s_drive_link" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Attach File (PDF, Excel, Word)</label>
+                        <input type="file" id="s_file" class="form-control" accept=".pdf, .xlsx, .xls, .doc, .docx">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-btn"><i class="fa-solid fa-upload me-1"></i> Save Syllabus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let currentYear = '2';
+let currentSubject = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchYear('2');
+});
+
+function switchYear(yr) {
+    currentYear = yr;
+    document.getElementById('btn-yr2').classList.toggle('active', yr === '2');
+    document.getElementById('btn-yr3').classList.toggle('active', yr === '3');
+    document.getElementById('year-tag-badge').textContent = `${yr}ND YEAR`;
+    loadSubjectsForYear();
+}
+
+async function loadSubjectsForYear() {
+    const container = document.getElementById('subject-menu-container');
+    container.innerHTML = `<div class="text-center py-3 text-muted"><i class="fa-solid fa-spinner fa-spin me-1"></i> Loading subjects...</div>`;
+
+    try {
+        let res = await fetch(`/api/subjects/all-by-year?year=${currentYear}`);
+        let data = await res.json();
+
+        if (!data.success || !data.data || data.data.length === 0) {
+            const fallbackRes = await fetch('/api/subjects');
+            const fallbackData = await fallbackRes.json();
+
+            if (fallbackData.success && fallbackData.data && fallbackData.data.length > 0) {
+                const uniqueMap = {};
+                fallbackData.data.forEach(s => {
+                    if (!s.year || s.year.toString().includes(currentYear)) uniqueMap[s.subject_name] = s;
+                });
+                let list = Object.values(uniqueMap);
+                if (list.length === 0) {
+                    fallbackData.data.forEach(s => { uniqueMap[s.subject_name] = s; });
+                    list = Object.values(uniqueMap);
+                }
+                data.data = list;
+            }
+        }
+
+        if (data.data && data.data.length > 0) {
+            container.innerHTML = data.data.map((s, idx) => `
+                <div class="subject-item-link ${idx === 0 ? 'active' : ''}" onclick="onSelectSubject(\`${s.subject_name.replace(/`/g, '')}\`, this)">
+                    <span>
+                        <i class="fa-solid ${s.subject_type === 'Lab' ? 'fa-flask text-warning' : 'fa-book text-primary'} me-2"></i> 
+                        ${s.subject_name}
+                    </span>
+                    <i class="fa-solid fa-chevron-right small text-muted"></i>
+                </div>
+            `).join('');
+            
+            onSelectSubject(data.data[0].subject_name, container.querySelector('.subject-item-link'));
+        } else {
+            container.innerHTML = `<div class="text-center py-4 text-muted small"><i class="fa-solid fa-info-circle me-1"></i> No subjects found.</div>`;
+            document.getElementById('selected-subject-title').textContent = 'No Subject Selected';
+            document.getElementById('syllabus-items-list').innerHTML = `<div class="text-center py-5 text-muted bg-white rounded-4 shadow-sm p-4"><h5>No Subjects Available</h5></div>`;
+        }
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+function onSelectSubject(subName, el) {
+    currentSubject = subName;
+    document.querySelectorAll('.subject-item-link').forEach(item => item.classList.remove('active'));
+    if (el) el.classList.add('active');
+
+    document.getElementById('selected-subject-title').textContent = `${currentSubject} Syllabus`;
+    loadSyllabusData();
+}
+
+async function loadSyllabusData() {
+    const list = document.getElementById('syllabus-items-list');
+    list.innerHTML = `<div class="text-center py-4 text-muted"><i class="fa-solid fa-spinner fa-spin me-1"></i> Loading syllabus...</div>`;
+
+    const res = await fetch(`/api/syllabus?year=${currentYear}&subject=${encodeURIComponent(currentSubject)}`);
+    const data = await res.json();
+
+    if (data.success && data.data.length > 0) {
+        list.innerHTML = data.data.map(item => `
+            <div class="syllabus-card shadow-sm">
+                <div>
+                    <h5 class="fw-bold text-dark mb-1">${item.title}</h5>
+                    <p class="text-secondary small mb-2">${item.description || 'Syllabus details'}</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        ${item.file_path ? `<a href="/${item.file_path}" target="_blank" class="btn btn-sm btn-outline-primary fw-bold"><i class="fa-solid fa-download me-1"></i> Download PDF/Excel File</a>` : ''}
+                        ${item.drive_link ? `<a href="${item.drive_link}" target="_blank" class="btn btn-sm btn-outline-success fw-bold"><i class="fa-solid fa-link me-1"></i> Open Google Drive Link</a>` : ''}
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-outline-danger fw-semibold" onclick="deleteSyllabusItem(${item.id})"><i class="fa-solid fa-trash me-1"></i> Delete</button>
+            </div>
+        `).join('');
+    } else {
+        list.innerHTML = `<div class="text-center py-5 text-muted bg-white rounded-4 shadow-sm p-4"><i class="fa-solid fa-file-circle-xmark fs-1 text-secondary mb-2 d-block"></i><h5>No Syllabus Uploaded for ${currentSubject} Yet</h5><p class="mb-0">Click <b>Add Syllabus</b> button above to upload PDF, Excel sheet, or Drive link.</p></div>`;
+    }
+}
+
+document.getElementById('addSyllabusForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentSubject) return alert("Please select a subject first!");
+
+    const saveBtn = document.getElementById('save-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Saving...`;
+
+    const formData = new FormData();
+    formData.append('year', currentYear);
+    formData.append('subject_name', currentSubject);
+    formData.append('title', document.getElementById('s_title').value);
+    formData.append('description', document.getElementById('s_description').value);
+    formData.append('drive_link', document.getElementById('s_drive_link').value);
+
+    const fileInput = document.getElementById('s_file');
+    if (fileInput.files[0]) formData.append('syllabus_file', fileInput.files[0]);
+
+    try {
+        const res = await fetch('/api/syllabus', { method: 'POST', body: formData });
+        const result = await res.json();
+        if (result.success) {
+            bootstrap.Modal.getInstance(document.getElementById('addSyllabusModal')).hide();
+            document.getElementById('addSyllabusForm').reset();
+            loadSyllabusData();
+        } else {
+            alert(result.message);
+        }
+    } catch(err) {
+        alert("Error saving syllabus: " + err.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `<i class="fa-solid fa-upload me-1"></i> Save Syllabus`;
+    }
+});
+
+async function deleteSyllabusItem(id) {
+    if (confirm("Are you sure you want to delete this syllabus?")) {
+        const res = await fetch(`/api/syllabus/${id}`, { method: 'DELETE' });
+        const result = await res.json();
+        if (result.success) loadSyllabusData();
+        else alert(result.message);
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Department Syllabus | Student View</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #eef2f9; min-height: 100vh; }
+.sidebar { position: fixed; left: 0; top: 0; width: 270px; height: 100vh; background: linear-gradient(180deg, #0f2b46 0%, #0d6efd 100%); color: white; padding-top: 25px; z-index: 100; }
+.sidebar a { display: flex; align-items: center; gap: 14px; padding: 14px 25px; color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px; font-weight: 500; }
+.sidebar a.active { background: rgba(255,255,255,0.16); color: white; }
+.main-content { margin-left: 270px; padding: 40px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="text-center px-3 pb-3 border-bottom border-light border-opacity-10 mb-3">
+        <img src="/admin/logo.png" style="width:50px;" alt="Logo">
+        <h5 class="fw-bold text-white mb-0 mt-2">CRR INFORMTECH</h5>
+        <small class="text-white-50">SYLLABUS PORTAL</small>
+    </div>
+    <a href="#" id="back-dashboard-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    <a href="#" class="active"><i class="fa-solid fa-file-pdf"></i> Department Syllabus</a>
+</div>
+
+<div class="main-content">
+    <div class="bg-white p-4 rounded-4 shadow-sm border mb-4">
+        <h3 class="fw-bold text-dark mb-1" id="sub-title">Department Syllabus</h3>
+        <p class="text-muted mb-0">Syllabus PDFs, Excel sheets & Google Drive links uploaded by Admin & CRs</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="bg-white p-3 rounded-4 shadow-sm border">
+                <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-book text-primary me-1"></i> Subjects</h6>
+                <div id="subject-list"><div class="text-center py-3 text-muted">Loading subjects...</div></div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div id="details-container">
+                <div class="bg-white p-5 rounded-4 shadow-sm border text-center text-muted">
+                    <h5>Select a Subject from the Left Menu</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const year = params.get('year') || '2';
+const section = params.get('section') || 'IT2A';
+
+document.getElementById('back-dashboard-btn').href = `/student/dashboard.html?year=${year}&section=${encodeURIComponent(section)}`;
+document.getElementById('sub-title').textContent = `Year ${year} (${section}) Syllabus`;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const res = await fetch(`/api/student/subjects?year=${year}&section=${encodeURIComponent(section)}`);
+    const data = await res.json();
+    const list = document.getElementById('subject-list');
+
+    if (data.success && data.data.length > 0) {
+        list.innerHTML = data.data.map(s => `
+            <div class="p-2.5 rounded-3 mb-2 font-semibold text-dark bg-light cursor-pointer" style="cursor:pointer;" onclick="loadSyllabus('${s.subject_name}', this)">
+                <i class="fa-solid ${s.subject_type === 'Lab' ? 'fa-flask text-warning' : 'fa-book text-primary'} me-2"></i> ${s.subject_name}
+            </div>
+        `).join('');
+        loadSyllabus(data.data[0].subject_name, list.querySelector('div'));
+    } else list.innerHTML = `<div class="text-muted small">No subjects found.</div>`;
+});
+
+async function loadSyllabus(subName, el) {
+    if (el) {
+        document.querySelectorAll('#subject-list div').forEach(d => d.classList.remove('bg-primary', 'text-white'));
+        el.classList.add('bg-primary', 'text-white');
+    }
+    const container = document.getElementById('details-container');
+    container.innerHTML = `<div class="text-center py-4 text-muted">Loading...</div>`;
+
+    const res = await fetch(`/api/syllabus?year=${year}&subject=${encodeURIComponent(subName)}`);
+    const data = await res.json();
+
+    if (data.success && data.data.length > 0) {
+        container.innerHTML = `
+            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-file-pdf text-danger me-2"></i> ${subName} Syllabus</h5>
+            ${data.data.map(item => `
+                <div class="bg-white p-3 rounded-3 shadow-sm border mb-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-1">${item.title}</h6>
+                        <p class="text-muted small mb-0">${item.description || ''}</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        ${item.file_path ? `<a href="/${item.file_path}" target="_blank" class="btn btn-sm btn-outline-primary fw-bold"><i class="fa-solid fa-download me-1"></i> File</a>` : ''}
+                        ${item.drive_link ? `<a href="${item.drive_link}" target="_blank" class="btn btn-sm btn-outline-success fw-bold"><i class="fa-solid fa-link me-1"></i> Drive Link</a>` : ''}
+                    </div>
+                </div>
+            `).join('')}
+        `;
+    } else container.innerHTML = `<div class="bg-white p-5 rounded-4 shadow-sm border text-center text-muted"><h5>No Syllabus Uploaded for ${subName} Yet</h5></div>`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subjects | CRR-INFORMTECH</title>
+
+<!-- Bootstrap 5.3 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #f4f6f9; }
+
+.header {
+    background: linear-gradient(120deg, #0f2b46 0%, #0d6efd 60%, #0369a1 100%);
+    color: white; padding: 30px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+    box-shadow: 0 8px 24px rgba(13,110,253,0.18); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+}
+
+.main-card {
+    background: white; border-radius: 18px; padding: 30px; box-shadow: 0 6px 18px rgba(0,0,0,0.05); margin-top: -20px;
+}
+
+.subject-card {
+    background: #ffffff; border-radius: 16px; padding: 22px; border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%; display: flex; flex-direction: column; justify-content: space-between;
+}
+.subject-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+
+.badge-type { font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-transform: uppercase; }
+.badge-theory { background: #e0f2fe; color: #0284c7; }
+.badge-lab { background: #fef3c7; color: #d97706; }
+</style>
+</head>
+
+<body>
+
+<div class="container py-4">
+    <div class="header mb-4">
+        <div>
+            <a id="back-btn" href="sections.html" class="btn btn-sm btn-light mb-2 fw-semibold" style="border-radius: 8px;">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Sections
+            </a>
+            <h2 class="fw-bold mb-0">Year <span id="year-title"></span> - Section <span id="section-title"></span> Subjects</h2>
+            <small class="opacity-75">Manage Theory and Lab Subjects for CR & Student Portals</small>
+        </div>
+        <button class="btn btn-light px-4 py-2 text-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addSubjectModal" style="border-radius: 10px;">
+            <i class="fa-solid fa-plus me-1"></i> Add New Subject
+        </button>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <div class="main-card">
+        <div class="row g-4" id="subjects-container">
+            <!-- Loaded via JS -->
+        </div>
+    </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header bg-primary text-white" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <h5 class="modal-title"><i class="fa-solid fa-plus me-2"></i> Add New Subject</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addSubjectForm">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label font-semibold">Subject Name *</label>
+                        <input type="text" name="subject_name" class="form-control" placeholder="e.g. Java Programming / DBMS Lab" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-semibold">Subject Type *</label>
+                        <select name="subject_type" class="form-select" required>
+                            <option value="Theory">Theory</option>
+                            <option value="Lab">Lab</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save me-1"></i> Save Subject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editSubjectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header bg-success text-white" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <h5 class="modal-title"><i class="fa-solid fa-pen-to-square me-2"></i> Edit Subject</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="editSubjectForm">
+                <input type="hidden" name="id" id="edit_sub_id">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label font-semibold">Subject Name *</label>
+                        <input type="text" name="subject_name" id="edit_sub_name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label font-semibold">Subject Type *</label>
+                        <select name="subject_type" id="edit_sub_type" class="form-select" required>
+                            <option value="Theory">Theory</option>
+                            <option value="Lab">Lab</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-arrows-rotate me-1"></i> Update Subject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteSubjectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header bg-danger text-white" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <h5 class="modal-title"><i class="fa-solid fa-trash me-2"></i> Delete Subject</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="deleteSubjectForm">
+                <input type="hidden" name="id" id="delete_sub_id">
+                <div class="modal-body p-3 text-center">
+                    <p class="mb-0" style="font-size: 13.5px;">Are you sure you want to delete <b id="delete_sub_name"></b>?</p>
+                </div>
+                <div class="modal-footer bg-light justify-content-center py-2">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Yes, Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const year = urlParams.get('year') || '';
+    const section = urlParams.get('section') || '';
+
+    if (!year || !section) {
+        window.location.href = "years.html";
+    }
+
+    document.getElementById('year-title').textContent = year;
+    document.getElementById('section-title').textContent = section;
+    document.title = `${section} Subjects | CRR-INFORMTECH`;
+    document.getElementById('back-btn').href = `sections.html?year=${encodeURIComponent(year)}`;
+
+    function showAlert(type, message) {
+        const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <i class="fa-solid ${icon} me-2"></i> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        document.getElementById('alert-container').innerHTML = alertHtml;
+    }
+
+    async function loadSubjects() {
+        try {
+            const response = await fetch(`/api/subjects?year=${encodeURIComponent(year)}&section=${encodeURIComponent(section)}`);
+            if (response.status === 401) {
+                window.location.href = '/cr/login.html'; // Fallback logic depending on role
+                return;
+            }
+            const data = await response.json();
+            const container = document.getElementById('subjects-container');
+            
+            if (data.success && data.data && data.data.length > 0) {
+                container.innerHTML = data.data.map(sub => {
+                    const type = sub.subject_type || 'Theory';
+                    const isLab = type.toLowerCase() === 'lab';
+                    const badgeClass = isLab ? 'badge-lab' : 'badge-theory';
+                    const icon = isLab ? 'fa-flask' : 'fa-book';
+                    
+                    return `
+                        <div class="col-md-4">
+                            <div class="subject-card">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="badge-type ${badgeClass}">
+                                            <i class="fa-solid ${icon} me-1"></i> ${type}
+                                        </span>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary border-0 edit-btn me-1" 
+                                                data-id="${sub.id}"
+                                                data-name="${sub.subject_name}"
+                                                data-type="${type}"
+                                                data-bs-toggle="modal" data-bs-target="#editSubjectModal">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger border-0 delete-btn" 
+                                                data-id="${sub.id}"
+                                                data-name="${sub.subject_name}"
+                                                data-bs-toggle="modal" data-bs-target="#deleteSubjectModal">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h5 class="fw-bold text-dark mb-3">${sub.subject_name}</h5>
+                                </div>
+                                <a href="subject_details.html?year=${encodeURIComponent(year)}&section=${encodeURIComponent(section)}&subject=${encodeURIComponent(sub.subject_name)}&type=${encodeURIComponent(type)}" 
+                                   class="btn btn-primary w-100 py-2 fw-semibold" style="border-radius: 10px;">
+                                   Open Resources <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                attachModalListeners();
+            } else {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5 text-muted">
+                        <i class="fa-solid fa-folder-open fs-1 mb-3 d-block text-secondary"></i>
+                        <h5>No subjects added yet for Year ${year} (Section ${section}).</h5>
+                        <p class="mb-0">Click <b>Add New Subject</b> to get started!</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error loading subjects:', error);
+            showAlert('danger', 'Failed to load subjects.');
+        }
+    }
+
+    function attachModalListeners() {
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('edit_sub_id').value = this.dataset.id;
+                document.getElementById('edit_sub_name').value = this.dataset.name;
+                document.getElementById('edit_sub_type').value = this.dataset.type;
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('delete_sub_id').value = this.dataset.id;
+                document.getElementById('delete_sub_name').textContent = this.dataset.name;
+            });
+        });
+    }
+
+    document.getElementById('addSubjectForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const jsonData = Object.fromEntries(formData.entries());
+        jsonData.year = year;
+        jsonData.section = section;
+
+        try {
+            const response = await fetch('/api/subjects', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            });
+            const data = await response.json();
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('addSubjectModal')).hide();
+                e.target.reset();
+                showAlert('success', data.message || `Subject added successfully!`);
+                loadSubjects();
+            } else {
+                showAlert('danger', data.message || 'Failed to add subject.');
+            }
+        } catch (error) {
+            showAlert('danger', 'Error adding subject.');
+        }
+    });
+
+    document.getElementById('editSubjectForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const jsonData = Object.fromEntries(formData.entries());
+        const id = jsonData.id;
+        delete jsonData.id;
+
+        try {
+            const response = await fetch(`/api/subjects/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            });
+            const data = await response.json();
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('editSubjectModal')).hide();
+                showAlert('success', data.message || `Subject updated successfully!`);
+                loadSubjects();
+            } else {
+                showAlert('danger', data.message || 'Failed to update subject.');
+            }
+        } catch (error) {
+            showAlert('danger', 'Error updating subject.');
+        }
+    });
+
+    document.getElementById('deleteSubjectForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('delete_sub_id').value;
+
+        try {
+            const response = await fetch(`/api/subjects/${id}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('deleteSubjectModal')).hide();
+                showAlert('success', data.message || `Subject deleted successfully!`);
+                loadSubjects();
+            } else {
+                showAlert('danger', data.message || 'Failed to delete subject.');
+            }
+        } catch (error) {
+            showAlert('danger', 'Error deleting subject.');
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", loadSubjects);
+</script>
+</body>
+</html>
