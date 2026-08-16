@@ -7,7 +7,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Render Reverse Proxy Trust (Mandatory for Render Deployment)
+// Render Reverse Proxy Trust
 app.set('trust proxy', 1);
 
 // Middleware
@@ -20,8 +20,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, // Set to false to allow both HTTP and HTTPS proxies
-        maxAge: 24 * 60 * 60 * 1000 // 24 Hours session
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000 // 24 Hours
     }
 }));
 
@@ -44,8 +44,10 @@ uploadDirs.forEach(dir => {
     }
 });
 
-// Serve Static Frontend and Uploaded Files
+// Serve Static Assets & Images Across All Routes
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/admin', express.static(path.join(__dirname, 'public', 'admin')));
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API Routes
@@ -58,12 +60,12 @@ app.use('/api/syllabus', require('./routes/syllabusRoutes'));
 app.use('/api/announcements', require('./routes/announcementRoutes'));
 app.use('/api', require('./routes/resourceRoutes'));
 
-// Fallback Route to Landing Page
+// Fallback Route to Main Landing Page
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start Express Server
+// Start Server
 app.listen(PORT, () => {
     console.log(`🚀 CRR-INFORMTECH Server running on port ${PORT}`);
 });
